@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravel-app
+    container_name: user-service-app
+    volumes:
+      - ./app-laravel:/var/www
+    ports:
+      - 8000:8000
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - REDIS_HOST=redis
+    command: >
+      sh -c "
+        composer install &&
+        php artisan key:generate &&
+        php artisan migrate --force &&
+        php artisan serve --host=0.0.0.0 --port=8000
+      "
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: users
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - user-service-data:/var/lib/mysql
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  user-service-data:
