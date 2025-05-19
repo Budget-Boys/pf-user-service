@@ -1,6 +1,7 @@
 FROM php:8.2-fpm
 
 RUN apt-get update && apt-get install -y \
+    netcat-openbsd \
     build-essential \
     libpng-dev \
     libjpeg-dev \
