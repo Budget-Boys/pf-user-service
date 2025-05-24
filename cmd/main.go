@@ -3,22 +3,28 @@ package main
 import (
 	"log"
 	"user-service/internal/config"
+	"user-service/internal/handler"
+	"user-service/internal/repository"
+	"user-service/internal/service"
 
+	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	godotenv.Load()
     db := config.ConnectDatabase()
+    repo := repository.NewUserRepository(db)
+    svc := service.NewUserService(repo)
+    h := handler.NewUserHandler(svc)
 
-    sqlDB, err := db.DB()
-    if err != nil {
-        log.Fatal("Error getting sql.DB:", err)
-    }
+    app := fiber.New()
 
-    if err := sqlDB.Ping(); err != nil {
-        log.Fatal("Failed to ping DB:", err)
-    }
+    app.Post("/user", h.Create)
+    app.Get("/users", h.GetAll)
+    app.Get("/user/:id", h.GetByID)
+    app.Delete("/user/:id", h.Delete)
 
-    log.Println("Ping DB successful — migrations OK")
+    log.Fatal(app.Listen(":9000"))
 }
+
