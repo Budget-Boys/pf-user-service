@@ -6,6 +6,7 @@ import (
 	"user-service/internal/handler"
 	"user-service/internal/repository"
 	"user-service/internal/service"
+    "user-service/internal/cache"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
@@ -25,6 +26,12 @@ func main() {
     app.Get("/user/:id", h.GetByID)
     app.Delete("/user/:id", h.Delete)
 
+    cache.ConnectRedis()
+    log.Println("Redis connected successfully")
+
+    app.Get("/ping-redis", handler.PingRedis)
+
     log.Fatal(app.Listen(":9000"))
+
 }
 
