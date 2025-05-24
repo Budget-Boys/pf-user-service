@@ -8,14 +8,14 @@ import (
 )
 
 type User struct {
-    ID                uuid.UUID      `gorm:"type:char(36);primaryKey"`
-    Name              string         `gorm:"type:varchar(255);not null"`
-    CPFCNPJ           string         `gorm:"type:varchar(20);uniqueIndex;not null"`
-    Phone             string         `gorm:"type:varchar(20)"`
-    Email             string         `gorm:"type:varchar(255);uniqueIndex;not null"`
-    EmailVerifiedAt   *time.Time
-    Password          string         `gorm:"type:varchar(255);not null"`
-    CreatedAt         time.Time
-    UpdatedAt         time.Time
-    DeletedAt         gorm.DeletedAt `gorm:"index"`
+    ID                uuid.UUID      `gorm:"type:char(36);primaryKey" json:"id"`
+    Name              string         `gorm:"type:varchar(255);not null" json:"name"`
+    CPFCNPJ           string         `gorm:"type:varchar(20);uniqueIndex;not null" json:"cpfcnpj"`
+    Phone             string         `gorm:"type:varchar(20)" json:"phone"`
+    Email             string         `gorm:"type:varchar(255);uniqueIndex;not null" json:"email"`
+    EmailVerifiedAt   *time.Time	 `json:"email_verified_at"`
+    Password          string         `gorm:"type:varchar(255);not null" json:"-"`
+    CreatedAt         time.Time		 `json:"created_at"`
+    UpdatedAt         time.Time		 `json:"updated_at"`
+    DeletedAt         gorm.DeletedAt `gorm:"index" json:"deleted_at"`
 }
