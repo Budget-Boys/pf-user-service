@@ -3,6 +3,8 @@ package handler
 import (
 	"user-service/internal/model"
 	"user-service/internal/service"
+
+	validatorx "user-service/internal/validator"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
@@ -24,8 +26,11 @@ func (userHandler *UserHandler) Create(c *fiber.Ctx) error {
 	}
 
 	if err := validate.Struct(user); err != nil {
-        return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
-    }
+		errors := validatorx.FormatValidationErrors(err)
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"errors": errors,
+		})
+	}
 
 	if err := userHandler.userService.Create(&user); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
