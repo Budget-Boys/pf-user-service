@@ -1,10 +1,11 @@
 package service
 
 import (
-    "user-service/internal/model"
-    "user-service/internal/repository"
+	"user-service/internal/model"
+	"user-service/internal/repository"
+	"user-service/internal/utils"
 
-    "github.com/google/uuid"
+	"github.com/google/uuid"
 )
 
 type UserService interface {
@@ -25,6 +26,14 @@ func NewUserService(userRepository repository.UserRepository) UserService {
 
 func (userService *userService) Create(user *model.User) error {
     user.ID = uuid.New()
+	hashedPassword, err := utils.HashPassword(user.Password)
+
+	if err != nil {
+		return nil
+	}
+
+	user.Password = hashedPassword
+
     return userService.userRepository.Create(user)
 }
 
