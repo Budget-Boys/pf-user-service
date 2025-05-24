@@ -1,41 +1,24 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"os"
+	"user-service/internal/config"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
 func main() {
-	// Carrega variáveis de ambiente
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Erro ao carregar .env, usando variáveis padrão.")
-	}
+	godotenv.Load()
+    db := config.ConnectDatabase()
 
-	// Cria conexão mínima com MySQL (não usada de fato, só pra manter dependência)
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
-		"root", "secret", "localhost", "user_service")
-	_, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Println("Não conectou ao MySQL (ok para teste de dependência)")
-	}
+    sqlDB, err := db.DB()
+    if err != nil {
+        log.Fatal("Error getting sql.DB:", err)
+    }
 
-	// Inicia Fiber
-	app := fiber.New()
+    if err := sqlDB.Ping(); err != nil {
+        log.Fatal("Failed to ping DB:", err)
+    }
 
-	app.Get("/health", func(c *fiber.Ctx) error {
-		return c.SendString("pf-user-service is running!")
-	})
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "9000"
-	}
-	log.Fatal(app.Listen(":" + port))
+    log.Println("Ping DB successful — migrations OK")
 }
