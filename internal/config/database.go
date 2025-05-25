@@ -7,8 +7,8 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"user-service/internal/model"
 	"user-service/internal/logger"
+	"user-service/internal/model"
 )
 
 func ConnectDatabase() *gorm.DB {
