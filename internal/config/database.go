@@ -2,12 +2,13 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"user-service/internal/model"
+	"user-service/internal/logger"
 )
 
 func ConnectDatabase() *gorm.DB {
@@ -22,14 +23,14 @@ func ConnectDatabase() *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed to connect to database:", err)
+		logger.Log.Fatal("Failed to connect to database", zap.Error(err))
 	}
 
 	err = db.AutoMigrate(&model.User{})
 	if err != nil {
-		log.Fatal("Failed to run migrations:", err)
+		logger.Log.Fatal("Failed to run migrations", zap.Error(err))
 	}
 
-	log.Println("Connected to MySQL successfully")
+	logger.Log.Info("Connected to MySQL successfully")
 	return db
 }
