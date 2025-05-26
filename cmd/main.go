@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"user-service/internal/cache"
 	"user-service/internal/config"
 	"user-service/internal/handler"
 	"user-service/internal/repository"
@@ -16,7 +15,8 @@ func main() {
 	godotenv.Load()
 	db := config.ConnectDatabase()
 	repo := repository.NewUserRepository(db)
-	svc := service.NewUserService(repo)
+	redisClient := config.NewRedisClient()
+	svc := service.NewUserService(repo, redisClient)
 	h := handler.NewUserHandler(svc)
 
 	app := fiber.New()
@@ -25,9 +25,6 @@ func main() {
 	app.Get("/users", h.GetAll)
 	app.Get("/user/:id", h.GetByID)
 	app.Delete("/user/:id", h.Delete)
-
-	cache.ConnectRedis()
-	log.Println("Redis connected successfully")
 
 	app.Get("/ping-redis", handler.PingRedis)
 
