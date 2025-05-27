@@ -4,9 +4,9 @@ import (
 	"log"
 	"user-service/internal/config"
 	"user-service/internal/handler"
+	"user-service/internal/logger"
 	"user-service/internal/repository"
 	"user-service/internal/service"
-    "user-service/internal/cache"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
@@ -14,24 +14,27 @@ import (
 
 func main() {
 	godotenv.Load()
-    db := config.ConnectDatabase()
-    repo := repository.NewUserRepository(db)
-    svc := service.NewUserService(repo)
-    h := handler.NewUserHandler(svc)
 
-    app := fiber.New()
+	logger.InitLogger()
+	defer logger.Log.Sync()
 
-    app.Post("/user", h.Create)
-    app.Get("/users", h.GetAll)
-    app.Get("/user/:id", h.GetByID)
-    app.Delete("/user/:id", h.Delete)
+	logger.Log.Info("Logger initialized")
 
-    cache.ConnectRedis()
-    log.Println("Redis connected successfully")
+	db := config.ConnectDatabase()
+	repo := repository.NewUserRepository(db)
+	redisClient := config.NewRedisClient()
+	svc := service.NewUserService(repo, redisClient)
+	h := handler.NewUserHandler(svc)
 
-    app.Get("/ping-redis", handler.PingRedis)
+	app := fiber.New()
 
-    log.Fatal(app.Listen(":9000"))
+	app.Post("/user", h.Create)
+	app.Get("/users", h.GetAll)
+	app.Get("/user/:id", h.GetByID)
+	app.Delete("/user/:id", h.Delete)
+
+	app.Get("/ping-redis", handler.PingRedis)
+
+	log.Fatal(app.Listen(":9000"))
 
 }
-
