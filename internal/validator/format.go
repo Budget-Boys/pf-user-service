@@ -27,7 +27,7 @@ func FormatValidationErrors(err error) map[string]string {
 		field := fieldErr.Field()
 		fieldName := userFieldNames[field]
 		if fieldName == "" {
-			fieldName = field // fallback para o nome original
+			fieldName = field
 		}
 
 		switch fieldErr.Tag() {

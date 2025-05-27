@@ -4,8 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
+	"go.uber.org/zap"
 	"time"
+	"user-service/internal/logger"
 	"user-service/internal/model"
 	"user-service/internal/repository"
 	"user-service/internal/utils"
@@ -55,7 +56,7 @@ func (userService *userService) GetByID(id string) (*model.PublicUser, error) {
 	if err == nil {
 		var publicUser model.PublicUser
 		if err := json.Unmarshal([]byte(cached), &publicUser); err == nil {
-			log.Println("Cache hit for user:", id)
+			logger.Log.Info("Cache hit for user", zap.String("userID", id))
 			return &publicUser, nil
 		}
 	}
@@ -69,7 +70,7 @@ func (userService *userService) GetByID(id string) (*model.PublicUser, error) {
 
 	data, _ := json.Marshal(publicUser)
 	userService.redisClient.Set(ctx, cacheKey, data, userCacheTTL)
-	log.Println("Cache miss for user:", id)
+	logger.Log.Info("Cache miss for user", zap.String("userID", id))
 	return &publicUser, nil
 }
 

@@ -4,6 +4,7 @@ import (
 	"log"
 	"user-service/internal/config"
 	"user-service/internal/handler"
+	"user-service/internal/logger"
 	"user-service/internal/repository"
 	"user-service/internal/service"
 
@@ -13,6 +14,12 @@ import (
 
 func main() {
 	godotenv.Load()
+
+	logger.InitLogger()
+	defer logger.Log.Sync()
+
+	logger.Log.Info("Logger initialized")
+
 	db := config.ConnectDatabase()
 	repo := repository.NewUserRepository(db)
 	redisClient := config.NewRedisClient()
