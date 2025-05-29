@@ -39,6 +39,7 @@ func main() {
 	app.Get("/users", h.GetAll)
 	app.Get("/users/:id", h.GetByID)
 	app.Delete("/users/:id", h.Delete)
+	app.Put("/users/:id", h.Update)
 
 	app.Post("/login", authHandler.Login)
 

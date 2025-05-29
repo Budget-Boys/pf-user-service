@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"user-service/internal/dto"
 	"user-service/internal/model"
 
 	"gorm.io/gorm"
@@ -44,8 +45,14 @@ func (userRepository *userRepository) FindAll() ([]model.User, error) {
 	return users, nil
 }
 
-func (userRepository *userRepository) Update(user *model.User) error {
-	return userRepository.db.Save(user).Error
+func (userRepository *userRepository) Update(id string, input dto.UserUpdateInput) error {
+	return userRepository.db.Model(&model.User{}).Where("id = ?", id).Updates(map[string]interface{}{
+		"name":     input.Name,
+		"cpfcnpj":  input.CPFCNPJ,
+		"phone":    input.Phone,
+		"email":    input.Email,
+		"password": input.Password,
+	}).Error
 }
 
 func (userRepository *userRepository) Delete(id string) error {
