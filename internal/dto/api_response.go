@@ -20,6 +20,6 @@ func RespondSuccess(c *fiber.Ctx, statusCode int, message string, data interface
 
 func RespondError(c *fiber.Ctx, statusCode int, message string) error {
 	return c.Status(statusCode).JSON(ErrorResponse{
-		Error:  message,
+		Error: message,
 	})
 }
