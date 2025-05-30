@@ -51,7 +51,7 @@ func (userHandler *UserHandler) GetByID(c *fiber.Ctx) error {
 		return dto.RespondError(c, fiber.StatusNotFound, "User not found")
 	}
 
-	return dto.RespondSuccess(c, fiber.StatusOK, "User retrieved!", user)
+	return dto.RespondPlain(c, fiber.StatusOK, user)
 }
 
 func (userHandler *UserHandler) GetAll(c *fiber.Ctx) error {
@@ -61,7 +61,7 @@ func (userHandler *UserHandler) GetAll(c *fiber.Ctx) error {
 		return dto.RespondError(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return dto.RespondSuccess(c, fiber.StatusOK, "Users retrieved!", users)
+	return dto.RespondPlain(c, fiber.StatusOK, users)
 }
 
 func (userHandler *UserHandler) Delete(c *fiber.Ctx) error {
