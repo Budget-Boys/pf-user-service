@@ -11,9 +11,9 @@ type PublicUser struct {
 
 func ToPublicUser(user *model.User) PublicUser {
 	return PublicUser{
-		ID:    user.ID.String(),
+		ID:      user.ID.String(),
 		CpfCnpj: user.CPFCNPJ,
-		Name:  user.Name,
-		Email: user.Email,
+		Name:    user.Name,
+		Email:   user.Email,
 	}
 }
