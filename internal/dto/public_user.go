@@ -1,6 +1,10 @@
 package dto
 
-import "user-service/internal/model"
+import (
+	"user-service/internal/model"
+
+	"github.com/google/uuid"
+)
 
 type PublicUser struct {
 	ID      string `json:"id"`
@@ -15,5 +19,14 @@ func ToPublicUser(user *model.User) PublicUser {
 		CpfCnpj: user.CPFCNPJ,
 		Name:    user.Name,
 		Email:   user.Email,
+	}
+}
+
+func ToPublicUserFromUpdateInput(id uuid.UUID, input UserUpdateInput) PublicUser {
+	return PublicUser{
+		ID:      id.String(),
+		CpfCnpj: input.CPFCNPJ,
+		Name:    input.Name,
+		Email:   input.Email,
 	}
 }

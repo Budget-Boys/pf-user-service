@@ -97,5 +97,7 @@ func (h *UserHandler) Update(c *fiber.Ctx) error {
 		return dto.RespondError(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return dto.RespondSuccess(c, fiber.StatusOK, "User Updated", input)
+	publicUserResponse := dto.ToPublicUserFromUpdateInput(id, input)
+
+	return dto.RespondSuccess(c, fiber.StatusOK, "User Updated", publicUserResponse)
 }

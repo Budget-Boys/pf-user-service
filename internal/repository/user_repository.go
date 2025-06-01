@@ -46,13 +46,38 @@ func (userRepository *userRepository) FindAll() ([]model.User, error) {
 }
 
 func (userRepository *userRepository) Update(id string, input dto.UserUpdateInput) error {
-	return userRepository.db.Model(&model.User{}).Where("id = ?", id).Updates(map[string]interface{}{
-		"name":     input.Name,
-		"cpfcnpj":  input.CPFCNPJ,
-		"phone":    input.Phone,
-		"email":    input.Email,
-		"password": input.Password,
-	}).Error
+	var existing model.User
+	if err := userRepository.db.First(&existing, "id = ?", id).Error; err != nil {
+		return err
+	}
+
+	updateData := map[string]interface{}{}
+
+	if input.Name != "" && input.Name != existing.Name {
+		updateData["name"] = input.Name
+	}
+
+	if input.CPFCNPJ != "" && input.CPFCNPJ != existing.CPFCNPJ {
+		updateData["cpfcnpj"] = input.CPFCNPJ
+	}
+
+	if input.Email != "" && input.Email != existing.Email {
+		updateData["email"] = input.Email
+	}
+
+	if input.Phone != "" && input.Phone != existing.Phone {
+		updateData["phone"] = input.Phone
+	}
+
+	if input.Password != "" {
+		updateData["password"] = input.Password
+	}
+
+	if len(updateData) == 0 {
+		return nil
+	}
+
+	return userRepository.db.Model(&model.User{}).Where("id = ?", id).Updates(updateData).Error
 }
 
 func (userRepository *userRepository) Delete(id string) error {
