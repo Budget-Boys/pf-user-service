@@ -7,6 +7,7 @@ import (
 	"user-service/internal/logger"
 	"user-service/internal/repository"
 	"user-service/internal/service"
+	"user-service/internal/auth"
 
 	"os"
 
@@ -29,8 +30,8 @@ func main() {
 	h := handler.NewUserHandler(svc)
 
 	jwtSecret := os.Getenv("JWT_SECRET")
-	authService := service.NewAuthService(repo, jwtSecret)
-	authHandler := handler.NewAuthHandler(authService)
+	authService := auth.NewAuthService(repo, jwtSecret)
+	authHandler := auth.NewAuthHandler(authService)
 
 	app := fiber.New()
 

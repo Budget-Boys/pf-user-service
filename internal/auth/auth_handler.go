@@ -1,8 +1,6 @@
-package handler
+package auth
 
 import (
-	"user-service/internal/model"
-	"user-service/internal/service"
 	validatorx "user-service/internal/validator"
 
 	"github.com/go-playground/validator/v10"
@@ -10,17 +8,17 @@ import (
 )
 
 type AuthHandler struct {
-	authService service.AuthService
+	authService AuthService
 }
 
 var validateAuth = validator.New()
 
-func NewAuthHandler(authService service.AuthService) *AuthHandler {
+func NewAuthHandler(authService AuthService) *AuthHandler {
 	return &AuthHandler{authService}
 }
 
 func (h *AuthHandler) Login(c *fiber.Ctx) error {
-	var req model.LoginRequest
+	var req LoginRequest
 
 	if err := c.BodyParser(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": "Invalid input"})
