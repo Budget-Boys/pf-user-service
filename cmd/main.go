@@ -8,6 +8,8 @@ import (
 	"user-service/internal/repository"
 	"user-service/internal/service"
 
+	"os"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
@@ -26,12 +28,18 @@ func main() {
 	svc := service.NewUserService(repo, redisClient)
 	h := handler.NewUserHandler(svc)
 
+	jwtSecret := os.Getenv("JWT_SECRET")
+	authService := service.NewAuthService(repo, jwtSecret)
+	authHandler := handler.NewAuthHandler(authService)
+
 	app := fiber.New()
 
 	app.Post("/user", h.Create)
 	app.Get("/users", h.GetAll)
 	app.Get("/user/:id", h.GetByID)
 	app.Delete("/user/:id", h.Delete)
+
+	app.Post("/login", authHandler.Login)
 
 	app.Get("/ping-redis", handler.PingRedis)
 
