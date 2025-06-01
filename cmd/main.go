@@ -2,12 +2,12 @@ package main
 
 import (
 	"log"
+	"user-service/internal/auth"
 	"user-service/internal/config"
 	"user-service/internal/handler"
 	"user-service/internal/logger"
 	"user-service/internal/repository"
 	"user-service/internal/service"
-	"user-service/internal/auth"
 
 	"os"
 
