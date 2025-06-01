@@ -82,7 +82,7 @@ func (userService *userService) Update(user *model.User) error {
 	if err := userService.userRepository.Update(user); err != nil {
 		return err
 	}
-	userService.invalidateCache(user.ID.String())
+	userService.InvalidateCache(user.ID.String())
 	return nil
 }
 
@@ -90,11 +90,11 @@ func (userService *userService) Delete(id string) error {
 	if err := userService.userRepository.Delete(id); err != nil {
 		return err
 	}
-	userService.invalidateCache(id)
+	userService.InvalidateCache(id)
 	return nil
 }
 
-func (userService *userService) invalidateCache(id string) {
+func (userService *userService) InvalidateCache(id string) {
 	cacheKey := fmt.Sprintf("user:%s", id)
 	userService.redisClient.Del(ctx, cacheKey)
 }
