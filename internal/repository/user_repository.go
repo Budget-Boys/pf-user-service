@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"user-service/internal/dto"
 	"user-service/internal/model"
 
 	"gorm.io/gorm"
@@ -45,39 +44,12 @@ func (userRepository *userRepository) FindAll() ([]model.User, error) {
 	return users, nil
 }
 
-func (userRepository *userRepository) Update(id string, input dto.UserUpdateInput) error {
-	var existing model.User
-	if err := userRepository.db.First(&existing, "id = ?", id).Error; err != nil {
-		return err
-	}
-
-	updateData := map[string]interface{}{}
-
-	if input.Name != "" && input.Name != existing.Name {
-		updateData["name"] = input.Name
-	}
-
-	if input.CPFCNPJ != "" && input.CPFCNPJ != existing.CPFCNPJ {
-		updateData["cpfcnpj"] = input.CPFCNPJ
-	}
-
-	if input.Email != "" && input.Email != existing.Email {
-		updateData["email"] = input.Email
-	}
-
-	if input.Phone != "" && input.Phone != existing.Phone {
-		updateData["phone"] = input.Phone
-	}
-
-	if input.Password != "" {
-		updateData["password"] = input.Password
-	}
-
-	if len(updateData) == 0 {
+func (r *userRepository) Update(id string, updates map[string]interface{}) error {
+	if len(updates) == 0 {
 		return nil
 	}
 
-	return userRepository.db.Model(&model.User{}).Where("id = ?", id).Updates(updateData).Error
+	return r.db.Model(&model.User{}).Where("id = ?", id).Updates(updates).Error
 }
 
 func (userRepository *userRepository) Delete(id string) error {

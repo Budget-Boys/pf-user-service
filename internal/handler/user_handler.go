@@ -39,7 +39,9 @@ func (userHandler *UserHandler) Create(c *fiber.Ctx) error {
 		return dto.RespondError(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return dto.RespondSuccess(c, fiber.StatusCreated, "User created!", user)
+	public_user := dto.ToPublicUser(&user)
+
+	return dto.RespondSuccess(c, fiber.StatusCreated, "User created!", public_user)
 }
 
 func (userHandler *UserHandler) GetByID(c *fiber.Ctx) error {
@@ -93,11 +95,10 @@ func (h *UserHandler) Update(c *fiber.Ctx) error {
 		})
 	}
 
-	if err := h.userService.Update(id.String(), input); err != nil {
+	user, err := h.userService.Update(id.String(), input)
+	if err != nil {
 		return dto.RespondError(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	publicUserResponse := dto.ToPublicUserFromUpdateInput(id, input)
-
-	return dto.RespondSuccess(c, fiber.StatusOK, "User Updated", publicUserResponse)
+	return dto.RespondSuccess(c, fiber.StatusOK, "User Updated", user)
 }
