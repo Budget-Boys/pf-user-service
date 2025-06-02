@@ -35,10 +35,10 @@ func main() {
 
 	app := fiber.New()
 
-	app.Post("/user", h.Create)
+	app.Post("/users", h.Create)
 	app.Get("/users", h.GetAll)
-	app.Get("/user/:id", h.GetByID)
-	app.Delete("/user/:id", h.Delete)
+	app.Get("/users/:id", h.GetByID)
+	app.Delete("/users/:id", h.Delete)
 
 	app.Post("/login", authHandler.Login)
 
