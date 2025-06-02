@@ -14,13 +14,10 @@ var userFieldNames = map[string]string{
 	"Password": "senha",
 }
 
-func FormatValidationErrors(err error) map[string]string {
-	errors := make(map[string]string)
-
+func FormatValidationErrors(err error) string {
 	validationErrors, ok := err.(validator.ValidationErrors)
 	if !ok {
-		errors["erro"] = "Erro de validação inesperado"
-		return errors
+		return "Erro de validação inesperado."
 	}
 
 	for _, fieldErr := range validationErrors {
@@ -32,17 +29,17 @@ func FormatValidationErrors(err error) map[string]string {
 
 		switch fieldErr.Tag() {
 		case "required":
-			errors[fieldName] = fmt.Sprintf("O campo %s é obrigatório", fieldName)
+			return fmt.Sprintf("O campo %s é obrigatório.", fieldName)
 		case "email":
-			errors[fieldName] = "O e-mail informado é inválido"
+			return "O e-mail informado é inválido."
 		case "min":
-			errors[fieldName] = fmt.Sprintf("O campo %s deve ter no mínimo %s caracteres", fieldName, fieldErr.Param())
+			return fmt.Sprintf("O campo %s deve ter no mínimo %s caracteres.", fieldName, fieldErr.Param())
 		case "len":
-			errors[fieldName] = fmt.Sprintf("O campo %s deve ter %s dígitos", fieldName, fieldErr.Param())
+			return fmt.Sprintf("O campo %s deve ter %s dígitos.", fieldName, fieldErr.Param())
 		default:
-			errors[fieldName] = fmt.Sprintf("O campo %s é inválido", fieldName)
+			return fmt.Sprintf("O campo %s é inválido.", fieldName)
 		}
 	}
 
-	return errors
+	return "Nenhum erro de validação específico encontrado."
 }

@@ -44,8 +44,12 @@ func (userRepository *userRepository) FindAll() ([]model.User, error) {
 	return users, nil
 }
 
-func (userRepository *userRepository) Update(user *model.User) error {
-	return userRepository.db.Save(user).Error
+func (r *userRepository) Update(id string, updates map[string]interface{}) error {
+	if len(updates) == 0 {
+		return nil
+	}
+
+	return r.db.Model(&model.User{}).Where("id = ?", id).Updates(updates).Error
 }
 
 func (userRepository *userRepository) Delete(id string) error {
