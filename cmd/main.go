@@ -23,6 +23,14 @@ func main() {
 
 	logger.Log.Info("Logger initialized")
 
+	eurekaClient := config.NewEurekaClient()
+
+	if err := eurekaClient.Register(); err != nil {
+		logger.Log.Info("Error registering service with Eureka: " + err.Error())
+	}
+
+	eurekaClient.StartHeartbeat()
+
 	db := config.ConnectDatabase()
 	repo := repository.NewUserRepository(db)
 	redisClient := config.NewRedisClient()
