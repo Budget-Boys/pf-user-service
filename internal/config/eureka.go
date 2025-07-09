@@ -4,6 +4,7 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"user-service/internal/logger"
 
 	"github.com/ArthurHlt/go-eureka-client/eureka"
 )
@@ -25,7 +26,7 @@ func NewEurekaClient() *EurekaClient {
 	port, _ := strconv.Atoi(portStr)
 
 	client := eureka.NewClient([]string{eurekaURL})
-
+	
 	instance := eureka.NewInstanceInfo(
 		host,
 		appName,
@@ -40,7 +41,7 @@ func NewEurekaClient() *EurekaClient {
 			"language": "go",
 		},
 	}
-
+	logger.Log.Info("Conectado com sucesso no Eureka")
 	return &EurekaClient{
 		Client:   client,
 		Instance: instance,

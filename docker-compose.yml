@@ -17,6 +17,7 @@ services:
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PORT=${REDIS_PORT}
     command: ["app"]
+    network_mode: host
 
   mysql:
     image: mysql:8.0
