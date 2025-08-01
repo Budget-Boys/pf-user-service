@@ -29,12 +29,13 @@ func (h *AuthHandler) Login(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"errors": errors})
 	}
 
-	token, err := h.authService.Login(req.Email, req.Password)
+	id, name, err := h.authService.Login(req.Email, req.Password)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": err.Error()})
 	}
 
 	return c.JSON(fiber.Map{
-		"token": token,
+		"id":   id,
+		"name": name,
 	})
 }
