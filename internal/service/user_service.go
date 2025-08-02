@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"time"
 	"user-service/internal/dto"
@@ -11,9 +10,7 @@ import (
 	"user-service/internal/model"
 	"user-service/internal/repository"
 	"user-service/internal/utils"
-
 	"go.uber.org/zap"
-
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 )
@@ -122,10 +119,6 @@ func (userService *userService) Update(id string, input dto.UserUpdateInput) (*d
 		if err != nil {
 			return nil, err
 		}
-	}
-
-	if len(updateData) == 0 {
-		return nil, errors.New("Nothing to update")
 	}
 
 	if err := userService.userRepository.Update(id, updateData); err != nil {
