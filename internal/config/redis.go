@@ -4,13 +4,14 @@ import (
 	"context"
 	"os"
 
+	"user-service/internal/logger"
+
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
-	"user-service/internal/logger"
 )
 
 func NewRedisClient() *redis.Client {
-	addr := os.Getenv("REDIS_HOST") + ":" + os.Getenv("REDIS_PORT")
+	addr := os.Getenv("USER_REDIS_HOST") + ":" + os.Getenv("USER_REDIS_PORT")
 
 	client := redis.NewClient(&redis.Options{
 		Addr: addr,

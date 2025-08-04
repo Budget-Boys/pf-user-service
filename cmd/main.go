@@ -37,7 +37,7 @@ func main() {
 	svc := service.NewUserService(repo, redisClient)
 	h := handler.NewUserHandler(svc)
 
-	jwtSecret := os.Getenv("JWT_SECRET")
+	jwtSecret := os.Getenv("USER_JWT_SECRET")
 	authService := auth.NewAuthService(repo, jwtSecret)
 	authHandler := auth.NewAuthHandler(authService)
 

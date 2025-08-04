@@ -4,21 +4,22 @@ import (
 	"fmt"
 	"os"
 
+	"user-service/internal/logger"
+	"user-service/internal/model"
+
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"user-service/internal/logger"
-	"user-service/internal/model"
 )
 
 func ConnectDatabase() *gorm.DB {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_NAME"),
+		os.Getenv("USER_DB_USER"),
+		os.Getenv("USER_DB_PASSWORD"),
+		os.Getenv("USER_DB_HOST"),
+		os.Getenv("USER_DB_PORT"),
+		os.Getenv("USER_DB_NAME"),
 	)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

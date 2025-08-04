@@ -20,13 +20,13 @@ type EurekaClient struct {
 // NewEurekaClient cria e configura o cliente Eureka
 func NewEurekaClient() *EurekaClient {
 	eurekaURL := os.Getenv("EUREKA_URL")
-	appName := os.Getenv("APP_NAME")
-	host := os.Getenv("APP_HOST")
-	portStr := os.Getenv("APP_PORT")
+	appName := os.Getenv("USER_APP_NAME")
+	host := os.Getenv("USER_APP_HOST")
+	portStr := os.Getenv("USER_APP_PORT")
 	port, _ := strconv.Atoi(portStr)
 
 	client := eureka.NewClient([]string{eurekaURL})
-	
+
 	instance := eureka.NewInstanceInfo(
 		host,
 		appName,
