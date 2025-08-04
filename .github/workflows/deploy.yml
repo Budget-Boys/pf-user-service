@@ -1,0 +1,12 @@
+name: Deploy user-service-go
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    uses: budget-boys/pf-ci-templates/.github/workflows/build-deploy.yml@main
+    with:
+      language: "go"
