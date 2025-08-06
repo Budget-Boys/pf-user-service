@@ -10,7 +10,7 @@ import (
 	"user-service/internal/service"
 
 	"os"
-
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
@@ -43,6 +43,12 @@ func main() {
 
 	app := fiber.New()
 
+	 app.Use(cors.New(cors.Config{
+        AllowOrigins:     "http://localhost:5173", // ou o domínio do seu frontend
+        AllowCredentials: true,
+        AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+        AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+    }))
 	app.Post("/users", h.Create)
 	app.Get("/users", h.GetAll)
 	app.Get("/users/:id", h.GetByID)
@@ -53,6 +59,6 @@ func main() {
 
 	app.Get("/ping-redis", handler.PingRedis)
 
-	log.Fatal(app.Listen(":9000"))
+	log.Fatal(app.Listen(":8080"))
 
 }
